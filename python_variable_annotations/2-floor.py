@@ -5,6 +5,6 @@
 import math
 
 
-def floor(n: int) -> float:
+def floor(n: float) -> int:
     """Returns the floor of a floating-point number."""
     return math.floor(n)
