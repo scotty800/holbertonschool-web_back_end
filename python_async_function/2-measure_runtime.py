@@ -13,7 +13,7 @@ module = __import__("1-concurrent_coroutines")
 wait_n = module.wait_n
 
 
-async def measure_time(n: int, max_delay: int) -> float:
+def measure_time(n: int, max_delay: int) -> float:
     """
     Measures the average time it takes to execute
     wait_n n times with the given max_delay.
