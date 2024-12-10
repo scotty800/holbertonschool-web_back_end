@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""function that implements a get_page method"""
+"""
+Deletion-resilient hypermedia pagination
+"""
 
 import csv
 import math
-from typing import List, Dict, Any
-
-
-index_range = __import__('0-simple_helper_function').index_range
+from typing import List, Dict
 
 
 class Server:
-    """Server class to paginate a database of popular baby names."""
+    """Server class to paginate a database of popular baby names.
+    """
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
@@ -18,36 +18,40 @@ class Server:
         self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
-        """Cached dataset."""
+        """Cached dataset
+        """
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
             self.__dataset = dataset[1:]
+
         return self.__dataset
 
     def indexed_dataset(self) -> Dict[int, List]:
-        """Dataset indexed by sorting position, starting at 0."""
+        """Dataset indexed by sorting position, starting at 0
+        """
         if self.__indexed_dataset is None:
             dataset = self.dataset()
-            self.__indexed_dataset = {i: dataset[i]
-                                      for i in range(len(dataset))}
+            self.__indexed_dataset = {
+                i: dataset[i] for i in range(len(dataset))
+            }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None,
-                        page_size: int = 10) -> Dict[str, Any]:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """
-        Retourne une page paginée, résiliente aux suppressions de données.
+        Returns a dictionary with pagination
+        metadata that is resilient to deletions.
         """
-
-        assert isinstance(index, int) and 0 <= index < len(
-            self.indexed_dataset()), \
-            "Index hors des limites du dataset."
+        assert isinstance
+        (index, int) and index >= 0, "Index must be a non-negative integer"
+        assert index < len(self.indexed_dataset()), "Index is out of range"
 
         data = []
         current_index = index
         dataset = self.indexed_dataset()
 
+        # Collect the data for the page, skipping deleted entries
         while len(data) < page_size and current_index < len(dataset):
             if current_index in dataset:
                 data.append(dataset[current_index])
@@ -59,5 +63,5 @@ class Server:
             "index": index,
             "data": data,
             "page_size": len(data),
-            "next_index": next_index,
+            "next_index": next_index
         }
