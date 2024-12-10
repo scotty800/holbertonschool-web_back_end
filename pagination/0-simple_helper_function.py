@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Function index range"""
+"""This function calculates the start and end index"""
 
 
 def index_range(page, page_size):
